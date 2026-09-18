@@ -6,6 +6,7 @@
 #include <random>
 #include <ctime>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 struct student {
@@ -23,7 +24,7 @@ void randominiai (student &s, const int &k);
 void duomenu_vedimas (student &studentas);
 void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
 int main() {
-    int c, k, paz_k;
+    int c, k = 0, paz_k;
     while (true) { // meniu
         cout << "\n1. Ivesti studentu duomenis ranka\n2. Generuoti duomenis\n3. Skaityti is failo\n\nPasirinkite: ";
         string choice; cin >> choice;
@@ -46,8 +47,7 @@ int main() {
         cout << "iveskite failo pavadinima: "; cin >> failo_pav;
         skaityti_is_failo(studentai, failo_pav);
     }   
-    for (int i = 0; i < k; ++i) {
-        if (c == 3) {break;}
+    for (int i = 0; c != 3 && i < k; ++i) {
         student studentas;
         cout << "vardas pavarde:\n"; cin >> studentas.vardas >> studentas.pavarde;
         switch (c) {
@@ -62,6 +62,8 @@ int main() {
         studentas.mediana = mediana(studentas);
         studentai.push_back(studentas);
     }
+    sort(studentai.begin(), studentai.end(), 
+        [](const student  &a, const student &b) {return a.pavarde < b.pavarde;});
     cout << left << setw(15) << "Vardas"
          << setw(15) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
@@ -134,18 +136,20 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
         cout << "nepavyko atidaryti failo: " << failo_pav << endl;
         return;
     }
-    string empty;
-    student s;
-    getline(f, empty, '\n');
-    while (f >> s.vardas >> s.pavarde) {
+    string line;
+    getline(f, line);
+    while (getline(f, line)) {
+        if (line.empty()) continue;
+        istringstream row(line);
+        student s;
+        row >> s.vardas >> s.pavarde;
         int balas;
-        while (f >> balas) {
+        while (row >> balas) {
             s.nd.push_back(balas);
         }
         s.egz = s.nd.back(); s.nd.pop_back();
         s.galutinis = galutinis(s);
         s.mediana = mediana(s);
         studentai.push_back(s);
-        s.nd.clear(); s.vardas.clear(); s.pavarde.clear();
     }
 }
