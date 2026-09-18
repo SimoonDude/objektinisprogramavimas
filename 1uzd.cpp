@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <fstream>
 
 using namespace std;
 struct student {
@@ -20,24 +21,33 @@ double mediana (student &s);
 double galutinis (student &s);
 void randominiai (student &s, const int &k);
 void duomenu_vedimas (student &studentas);
+void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
 int main() {
     int c, k, paz_k;
     while (true) { // meniu
-        cout << "\n1. Ivesti studentu duomenis ranka\n2. Generuoti duomenis\n\nPasirinkite:";
+        cout << "\n1. Ivesti studentu duomenis ranka\n2. Generuoti duomenis\n3. Skaityti is failo\n\nPasirinkite: ";
         string choice; cin >> choice;
         try {
             c = stoi(choice);
-            if (c == 1 || c == 2) {break;}
+            if (c == 1 || c == 2 || c == 3) {break;}
             else {cout << "\n\n\n"; continue;}
         } catch (...) {
             cout << "\n\n\n"; continue;
         }
     }
     vector<student> studentai;
-    cout << "kiek studentu?: "; while (true) if (!get_int_input(k)) continue; else break;
-    if (k == 0) {cout << "nera studentu, programa baigia darba.\n"; return 0;}
-    if (c == 2) {cout << "pazymiu/ivertinimu kiekis: "; while (true) if (!get_int_input(paz_k)) continue; else break;}
+    if (c == 1 || c == 2) {
+        cout << "kiek studentu?: "; while (true) if (!get_int_input(k)) continue; else break;
+        if (k == 0) {cout << "nera studentu, programa baigia darba.\n"; return 0;}
+    }
+    else if (c == 2) {cout << "pazymiu/ivertinimu kiekis: "; while (true) if (!get_int_input(paz_k)) continue; else break;}
+    else if (c == 3) {
+        string failo_pav;
+        cout << "iveskite failo pavadinima: "; cin >> failo_pav;
+        skaityti_is_failo(studentai, failo_pav);
+    }   
     for (int i = 0; i < k; ++i) {
+        if (c == 3) {break;}
         student studentas;
         cout << "vardas pavarde:\n"; cin >> studentas.vardas >> studentas.pavarde;
         switch (c) {
@@ -117,4 +127,25 @@ void duomenu_vedimas (student &studentas) {
     }
     cout << "egzamino rez.:\n";
     get_int_input(studentas.egz);
+}
+void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
+    ifstream f(failo_pav);
+    if (!f.is_open()) {
+        cout << "nepavyko atidaryti failo: " << failo_pav << endl;
+        return;
+    }
+    string empty;
+    student s;
+    getline(f, empty, '\n');
+    while (f >> s.vardas >> s.pavarde) {
+        int balas;
+        while (f >> balas) {
+            s.nd.push_back(balas);
+        }
+        s.egz = s.nd.back(); s.nd.pop_back();
+        s.galutinis = galutinis(s);
+        s.mediana = mediana(s);
+        studentai.push_back(s);
+        s.nd.clear(); s.vardas.clear(); s.pavarde.clear();
+    }
 }
