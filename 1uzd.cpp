@@ -15,10 +15,12 @@ struct student {
     double galutinis;
     double mediana; // ikelti funkcija i struktura ?
 };
-void manual (vector<student> &studentai);
 bool get_int_input (int &balas);
+double mediana (student &s);
+student randominiai (student &s, const int &k);
+void duomenu_vedimas (student &studentas);
 int main() {
-    int c, k;
+    int c, k, paz_k;
     while (true) { // meniu
         cout << "\n1. Ivesti studentu duomenis ranka\n2. Generuoti duomenis\n\nPasirinkite:";
         string choice; cin >> choice;
@@ -32,15 +34,15 @@ int main() {
     }
     vector<student> studentai;
     cout << "kiek studentu?: "; while (true) if (!get_int_input(k)) continue; else break;
+    if (k == 0) {cout << "nera studentu, programa baigia darba.\n"; return 0;}
+    if (c == 2) {cout << "pazymiu/ivertinimu kiekis: "; while (true) if (!get_int_input(paz_k)) continue; else break;}
     for (int i = 0; i < k; ++i) {
-        student studentas; int paz_k;
+        student studentas;
         cout << "vardas pavarde:\n"; cin >> studentas.vardas >> studentas.pavarde;
         switch (c) {
             case 1:
                 duomenu_vedimas(studentas);
             case 2:
-                cout << "pazymiu/ivertinimu kiekis: ";
-                while (true) if (!get_int_input(paz_k)) continue; else break;
                 randominiai(studentas, paz_k);
         };
         for (auto &i : studentas.nd) studentas.galutinis += i;
