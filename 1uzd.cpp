@@ -13,11 +13,12 @@ struct student {
     vector<int> nd;
     int egz;
     double galutinis;
-    double mediana; // ikelti funkcija i struktura ?
+    double mediana; // ikelti funkcijas i struktura ?
 };
-bool get_int_input (int &balas);
+bool get_int_input (int &balas, bool minusvienas = false); // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
 double mediana (student &s);
-student randominiai (student &s, const int &k);
+double galutinis (student &s);
+void randominiai (student &s, const int &k);
 void duomenu_vedimas (student &studentas);
 int main() {
     int c, k, paz_k;
@@ -26,7 +27,7 @@ int main() {
         string choice; cin >> choice;
         try {
             c = stoi(choice);
-            if (c == 2 || c == 3) {break;}
+            if (c == 1 || c == 2) {break;}
             else {cout << "\n\n\n"; continue;}
         } catch (...) {
             cout << "\n\n\n"; continue;
@@ -42,18 +43,12 @@ int main() {
         switch (c) {
             case 1:
                 duomenu_vedimas(studentas);
+                break;
             case 2:
                 randominiai(studentas, paz_k);
+                break;
         };
-        for (auto &i : studentas.nd) studentas.galutinis += i;
-        if(studentas.nd.size() != 0){ 
-            studentas.galutinis /= studentas.nd.size(); // dalyba is nulio?
-        } else {
-            studentas.galutinis = 0;
-        }
-        cout << "egzamino rez.:\n";
-        cin >> studentas.egz;
-        studentas.galutinis = studentas.galutinis * 0.4 + studentas.egz * 0.6;
+        studentas.galutinis = galutinis(studentas);
         studentas.mediana = mediana(studentas);
         studentai.push_back(studentas);
     }
@@ -71,17 +66,17 @@ int main() {
     }
 }
 
-bool get_int_input (int &balas) { // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
+bool get_int_input (int &balas, bool minusvienas) { // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
     string b; cin >> b;
     try {
         balas = stoi(b);
-        if (balas > 0) {return 1;} else {throw;}
+        if (balas > 0 || (minusvienas && balas == -1)) {return 1;} else {throw 1;}
     } catch (...) {
         cout << "turi priklausyti naturaliu skaiciu aibei.\n";
         return 0;
     }
 }
-double mediana (student &s) { // ikelti funkcija i struktura ?
+double mediana (student &s) { // ikelti funkcijas i struktura ?
     int dydis = s.nd.size();
     if (dydis == 0) {return 0;}
     sort(s.nd.begin(), s.nd.end());
@@ -92,21 +87,34 @@ double mediana (student &s) { // ikelti funkcija i struktura ?
     }
     return s.mediana;
 };
-student randominiai (student &s, const int &k = 10) {
+double galutinis (student &s) {
+    s.galutinis = 0;
+    for (auto &i : s.nd) s.galutinis += i;
+    if(s.nd.size() != 0){ 
+        s.galutinis /= s.nd.size();
+    } else {
+        s.galutinis = 0;
+    }
+    s.galutinis = s.galutinis * .4 + s.egz * .6;
+    return s.galutinis;
+}
+void randominiai (student &s, const int &k = 10) {
     std::random_device rd;  // a seed source for the random number engine
     std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
     std::uniform_int_distribution<> distrib(1, 10); // cia istraukiau is cppreference.com
     for(int i = 0; i < k; ++i) {
         s.nd.push_back(distrib(gen));
     }
-    return s;
+    s.egz = distrib(gen);
 };
 void duomenu_vedimas (student &studentas) {
     cout << "veskite namu darbu pazymius, baigus iveskite -1:\n";
     while(true) {
         int balas;
-        if (!get_int_input(balas)) continue;
+        if (!get_int_input(balas, 1)) continue;
         if (balas == -1) break;
         studentas.nd.push_back(balas);
     }
+    cout << "egzamino rez.:\n";
+    get_int_input(studentas.egz);
 }
