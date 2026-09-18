@@ -3,6 +3,8 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
+#include <random>
+#include <ctime>
 
 using namespace std;
 struct student {
@@ -11,34 +13,46 @@ struct student {
     vector<int> nd;
     int egz;
     double galutinis;
-    double mediana;
+    double mediana; // ikelti funkcija i struktura ?
 };
+void manual (vector<student> &studentai);
+bool get_int_input (int &balas);
 int main() {
-    vector<student> studentai;
-    int n; cout << "iveskite studentu skaiciu\n"; cin >> n;
-    for(int i = 0; i < n; ++i) {
-        student studentas;
-        cout << "vardas, pavarde\n"; cin >> studentas.vardas; cin >> studentas.pavarde;
-        cout << "veskite namu darbu pazymius, baigus iveskite -1:\n";
-        while(true) {
-            string b; int balas;
-            cin >> b;
-            try {
-                balas = stoi(b);
-            } catch (...) {
-                cout << "turi buti skaicius.\n";
-                continue;
-            }
-            if (balas == -1) break;
-            studentas.nd.push_back(balas);
+    int c, k;
+    while (true) { // meniu
+        cout << "\n1. Ivesti studentu duomenis ranka\n2. Generuoti duomenis\n\nPasirinkite:";
+        string choice; cin >> choice;
+        try {
+            c = stoi(choice);
+            if (c == 2 || c == 3) {break;}
+            else {cout << "\n\n\n"; continue;}
+        } catch (...) {
+            cout << "\n\n\n"; continue;
         }
+    }
+    vector<student> studentai;
+    cout << "kiek studentu?: "; while (true) if (!get_int_input(k)) continue; else break;
+    for (int i = 0; i < k; ++i) {
+        student studentas; int paz_k;
+        cout << "vardas pavarde:\n"; cin >> studentas.vardas >> studentas.pavarde;
+        switch (c) {
+            case 1:
+                duomenu_vedimas(studentas);
+            case 2:
+                cout << "pazymiu/ivertinimu kiekis: ";
+                while (true) if (!get_int_input(paz_k)) continue; else break;
+                randominiai(studentas, paz_k);
+        };
         for (auto &i : studentas.nd) studentas.galutinis += i;
-        studentas.galutinis /= studentas.nd.size();
+        if(studentas.nd.size() != 0){ 
+            studentas.galutinis /= studentas.nd.size(); // dalyba is nulio?
+        } else {
+            studentas.galutinis = 0;
+        }
         cout << "egzamino rez.:\n";
         cin >> studentas.egz;
         studentas.galutinis = studentas.galutinis * 0.4 + studentas.egz * 0.6;
-        sort(studentas.nd.begin(), studentas.nd.end());
-        studentas.mediana = (studentas.nd[2] + studentas.nd[3]) / 2.0 * 0.4 + studentas.egz * 0.6;
+        studentas.mediana = mediana(studentas);
         studentai.push_back(studentas);
     }
     cout << left << setw(15) << "Vardas"
@@ -52,5 +66,45 @@ int main() {
              << setw(15) << i.pavarde
              << setw(20) << i.galutinis
              << setw(20) << i.mediana << '\n';
+    }
+}
+
+bool get_int_input (int &balas) { // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
+    string b; cin >> b;
+    try {
+        balas = stoi(b);
+        if (balas > 0) {return 1;} else {throw;}
+    } catch (...) {
+        cout << "turi priklausyti naturaliu skaiciu aibei.\n";
+        return 0;
+    }
+}
+double mediana (student &s) { // ikelti funkcija i struktura ?
+    int dydis = s.nd.size();
+    if (dydis == 0) {return 0;}
+    sort(s.nd.begin(), s.nd.end());
+    if (dydis % 2 == 0) {
+        s.mediana = s.nd[dydis/2] * .4 + s.egz * .6; // cia irgi galimai? dalyba is nulio
+    } else {
+        s.mediana = (s.nd[floor(dydis/2.0)] + s.nd[ceil(dydis/2.0)])/2 * .4 + s.egz * .6;
+    }
+    return s.mediana;
+};
+student randominiai (student &s, const int &k = 10) {
+    std::random_device rd;  // a seed source for the random number engine
+    std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> distrib(1, 10); // cia istraukiau is cppreference.com
+    for(int i = 0; i < k; ++i) {
+        s.nd.push_back(distrib(gen));
+    }
+    return s;
+};
+void duomenu_vedimas (student &studentas) {
+    cout << "veskite namu darbu pazymius, baigus iveskite -1:\n";
+    while(true) {
+        int balas;
+        if (!get_int_input(balas)) continue;
+        if (balas == -1) break;
+        studentas.nd.push_back(balas);
     }
 }
