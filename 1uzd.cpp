@@ -18,6 +18,7 @@ struct student {
     double mediana; // ikelti funkcijas i struktura ?
 };
 bool get_int_input (int &balas, bool minusvienas = false); // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
+bool get_name_input (string &vard, string&pav); // get input string; if `-1` break loop
 double mediana (student &s);
 double galutinis (student &s);
 void randominiai (student &s, const int &k);
@@ -37,19 +38,20 @@ int main() {
         }
     }
     vector<student> studentai;
-    if (c == 1 || c == 2) {
-        cout << "kiek studentu?: "; while (true) if (!get_int_input(k)) continue; else break;
-        if (k == 0) {cout << "nera studentu, programa baigia darba.\n"; return 0;}
-    }
-    else if (c == 2) {cout << "pazymiu/ivertinimu kiekis: "; while (true) if (!get_int_input(paz_k)) continue; else break;}
+    if (c == 2) {cout << "pazymiu/ivertinimu kiekis: "; while (true) if (!get_int_input(paz_k)) continue; else break;}
     else if (c == 3) {
         string failo_pav;
+        system("cd"); system("dir *.txt");
         cout << "iveskite failo pavadinima: "; cin >> failo_pav;
         skaityti_is_failo(studentai, failo_pav);
     }   
-    for (int i = 0; c != 3 && i < k; ++i) {
+    while (true) {
         student studentas;
-        cout << "vardas pavarde:\n"; cin >> studentas.vardas >> studentas.pavarde;
+        cout << "vardas pavarde:\n";
+        if (!get_name_input(studentas.vardas, studentas.pavarde)) {
+            if (studentai.size() == 0) {cout << "nera studentu, programa baigia darba.\n"; return 0;}
+            break;
+        }
         switch (c) {
             case 1:
                 duomenu_vedimas(studentas);
@@ -77,7 +79,10 @@ int main() {
              << setw(20) << i.mediana << '\n';
     }
 }
-
+bool get_name_input (string &vard, string &pav) {
+    cin >> vard >> pav;
+    if (vard != "-1" || pav != "-1") {return 1;} else {return 0;}
+};
 bool get_int_input (int &balas, bool minusvienas) { // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
     string b; cin >> b;
     try {
