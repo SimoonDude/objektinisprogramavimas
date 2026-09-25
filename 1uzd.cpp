@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <algorithm>
 #include <random>
-#include <ctime>
 #include <fstream>
 #include <sstream>
 
@@ -14,13 +13,11 @@ struct student {
     string pavarde;
     vector<int> nd;
     int egz;
-    double galutinis;
-    double mediana; // ikelti funkcijas i struktura ?
+    double vidurkis () const;
+    double mediana () const;
 };
 bool get_int_input (int &balas, bool minusvienas = false); // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
 bool get_name_input (string &vard, string&pav); // get input string; if `-1` break loop
-double mediana (student &s);
-double galutinis (student &s);
 void randominiai (student &s, const int &k);
 void duomenu_vedimas (student &studentas);
 void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
@@ -60,8 +57,6 @@ int main() {
                 randominiai(studentas, paz_k);
                 break;
         };
-        studentas.galutinis = galutinis(studentas);
-        studentas.mediana = mediana(studentas);
         studentai.push_back(studentas);
     }
     sort(studentai.begin(), studentai.end(), 
@@ -75,8 +70,8 @@ int main() {
     for (const auto &i : studentai) {
         cout << left << setw(15) << i.vardas
              << setw(15) << i.pavarde
-             << setw(20) << i.galutinis
-             << setw(20) << i.mediana << '\n';
+             << setw(20) << i.vidurkis()
+             << setw(20) << i.mediana() << '\n';
     }
 }
 bool get_name_input (string &vard, string &pav) {
@@ -93,27 +88,25 @@ bool get_int_input (int &balas, bool minusvienas) { // paima int inputa is useri
         return 0;
     }
 }
-double mediana (student &s) { // ikelti funkcijas i struktura ?
-    int dydis = s.nd.size();
-    if (dydis == 0) {return 0;}
-    sort(s.nd.begin(), s.nd.end());
-    if (dydis % 2 == 0) {
-        s.mediana = s.nd[dydis/2] * .4 + s.egz * .6; // cia irgi galimai? dalyba is nulio
+double student::mediana () const { // ikelti funkcijas i struktura ?
+    if (nd.empty()) return egz * .6;
+    auto pazymiai = nd;
+    sort(pazymiai.begin(), pazymiai.end());\
+    double mediana;
+    if (pazymiai.size() % 2 == 1) {
+        mediana = pazymiai[pazymiai.size() / 2];
     } else {
-        s.mediana = (s.nd[floor(dydis/2.0)] + s.nd[ceil(dydis/2.0)])/2 * .4 + s.egz * .6;
+        size_t vidurys = pazymiai.size() / 2;
+        mediana = (pazymiai[vidurys - 1] + pazymiai[vidurys]) / 2.0;
     }
-    return s.mediana;
+    return mediana * .4 + egz * .6;
 };
-double galutinis (student &s) {
-    s.galutinis = 0;
-    for (auto &i : s.nd) s.galutinis += i;
-    if(s.nd.size() != 0){ 
-        s.galutinis /= s.nd.size();
-    } else {
-        s.galutinis = 0;
-    }
-    s.galutinis = s.galutinis * .4 + s.egz * .6;
-    return s.galutinis;
+double student::vidurkis () const {
+    if (nd.empty()) return egz * .6; 
+    double galutinis = 0;
+    for (int pazymys : nd) galutinis += pazymys;
+    galutinis /= nd.size();
+    return galutinis * .4 + egz * .6;
 }
 void randominiai (student &s, const int &k = 10) {
     std::random_device rd;  // a seed source for the random number engine
@@ -153,8 +146,6 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
             s.nd.push_back(balas);
         }
         s.egz = s.nd.back(); s.nd.pop_back();
-        s.galutinis = galutinis(s);
-        s.mediana = mediana(s);
         studentai.push_back(s);
     }
 }
