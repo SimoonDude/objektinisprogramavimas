@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 using namespace std;
 
@@ -83,6 +84,7 @@ void duomenu_ivedimas (student &studentas) {
     get_int_input(studentas.egz);
 }
 void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
+    auto start = chrono::high_resolution_clock::now();
     ifstream f(failo_pav);
     if (!f.is_open()) {
         cout << "nepavyko atidaryti failo: " << failo_pav << endl;
@@ -103,8 +105,11 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
         studentai.push_back(s);
     }
     f.close();
+    chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
+    cout << " | Failo skaitymas uztruko: " << diff.count() << " s.\n";
 }
 void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
+    auto start = chrono::high_resolution_clock::now();
     ofstream f(failo_pav);
     if (!f.is_open()) {
         cout << "neapvyko atidaryti failo: " << failo_pav << endl;
@@ -123,6 +128,8 @@ void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
              << setw(20) << i.mediana_val << '\n';
     }
     f.close();
+    chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
+    cout << " | Failo rasymas uztruko: " << diff.count() << " s.\n";
 }
 void spausdinti_i_terminal (vector<student>& studentai) {
     cout << left << setw(15) << "Vardas"

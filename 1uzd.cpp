@@ -31,7 +31,7 @@ int main() {
         cout << "pazymiu/ivertinimu kiekis: "; 
         while (true) if (!get_int_input(paz_k)) continue; else break;
     }
-    else if (c == 2) { // skaityti is failo
+    else if (c == 2) { // skaityti is failor
         string failo_pav;
         system("cd"); system("dir *.txt");
         cout << "iveskite duomenu failo pavadinima : "; cin >> failo_pav;
@@ -70,11 +70,14 @@ int main() {
     if (k == 1) {
         spausdinti_i_terminal(studentai);
     } else if (k == 2) {
+        auto start = chrono::high_resolution_clock::now();
         vector<student> galutinis_over5, galutinis_below5;
         for (const auto &s : studentai) {
             if (s.vidurkis_val >= 5) {galutinis_over5.push_back(s);}
             else {galutinis_below5.push_back(s);}
         }
+        chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
+        cout << " | Studentu skirstymas i dvi grupes uztruko: " << diff.count() << " s.\n";
         string failo_pav;
         cout << "iveskite failo pavadinima isvedimui (islaikiusiems): "; cin >> failo_pav;
         spausdinti_i_faila(galutinis_over5, failo_pav);
