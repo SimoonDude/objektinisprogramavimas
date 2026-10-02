@@ -28,6 +28,7 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
 void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav);
 void spausdinti_i_terminal (vector<student>& studentai);
 void generuoti_studentus (vector<student>& studentai, const int &paz_k);
+void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav = "output");
 
 bool get_name_input (string &vard, string &pav) {
     cin >> vard >> pav;
@@ -106,7 +107,7 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
     }
     f.close();
     chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
-    cout << " | Failo skaitymas uztruko: " << diff.count() << " s.\n";
+    cout << " | " << failo_pav << " Failo skaitymas uztruko: " << diff.count() << " s.\n";
 }
 void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
     auto start = chrono::high_resolution_clock::now();
@@ -129,7 +130,7 @@ void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
     }
     f.close();
     chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
-    cout << " | Failo rasymas uztruko: " << diff.count() << " s.\n";
+    cout << " | " << failo_pav << " Failo rasymas uztruko: " << diff.count() << " s.\n";
 }
 void spausdinti_i_terminal (vector<student>& studentai) {
     cout << left << setw(15) << "Vardas"
@@ -145,7 +146,7 @@ void spausdinti_i_terminal (vector<student>& studentai) {
              << setw(20) << i.mediana_val << '\n';
     }
 }
-void generuoti_studentus (vector<student>& studentai, const int &paz_k) {
+inline void generuoti_studentus (vector<student>& studentai, const int &paz_k) {
     int kiekis;
     cout << "iveskite studentu kieki: ";
     while (true) if (!get_int_input(kiekis)) continue; else break;
@@ -157,5 +158,28 @@ void generuoti_studentus (vector<student>& studentai, const int &paz_k) {
         s.pavarde = "Pavarde" + to_string(i + 1);
         randominiai_pazymiai(s, paz_k);
         studentai.push_back(s);
+    }
+}
+void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav) {
+    for (auto &s : studentai) {
+        s.vidurkis();
+        s.mediana();
+    }
+    sort(studentai.begin(), studentai.end(), 
+        [](const student  &a, const student &b) {return a.vidurkis_val > b.vidurkis_val;});
+    
+    if (k == 1) {
+        spausdinti_i_terminal(studentai);
+    } else if (k == 2) {
+        auto start = chrono::high_resolution_clock::now();
+        vector<student> galutinis_over5, galutinis_below5;
+        for (const auto &s : studentai) {
+            if (s.vidurkis_val >= 5) {galutinis_over5.push_back(s);}
+            else {galutinis_below5.push_back(s);}
+        }
+        chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
+        cout << " | Studentu skirstymas i dvi grupes uztruko: " << diff.count() << " s.\n";
+        spausdinti_i_faila(galutinis_over5, failo_pav + "_islaike.txt");
+        spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt");
     }
 }
