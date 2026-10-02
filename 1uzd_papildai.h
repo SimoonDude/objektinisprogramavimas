@@ -29,6 +29,17 @@ void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav);
 void spausdinti_i_terminal (vector<student>& studentai);
 void generuoti_studentus (vector<student>& studentai, const int &paz_k);
 void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav = "output");
+void imti_random_varda_pavarde (student& s, const vector<string>& vardai_vyr, const vector<string>& pavardes_vyr, const vector<string>& vardai_mot, const vector<string>& pavardes_mot);
+
+int stulpelio_plotis (const string& tekstas, int plotis) {
+    int simboliu_kiekis = 0;
+    for (size_t i = 0; i < tekstas.size(); ++i) {
+        if ((static_cast<unsigned char>(tekstas[i]) & 0xC0) != 0x80) {
+            ++simboliu_kiekis;
+        }
+    }
+    return plotis + static_cast<int>(tekstas.size()) - simboliu_kiekis;
+}
 
 bool get_name_input (string &vard, string &pav) {
     cin >> vard >> pav;
@@ -116,15 +127,15 @@ void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
         cout << "neapvyko atidaryti failo: " << failo_pav << endl;
         return;
     }
-    f << left << setw(15) << "Vardas"
-         << setw(15) << "Pavarde"
+    f << left << setw(30) << "Vardas"
+         << setw(30) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
-         << setw(20) << "Galutinis (med.)\n";
-    f << string(70, '-') << '\n';
+         << setw(20) << "Galutinis (med.)" << '\n';
+    f << string(100, '-') << '\n';
     f << fixed << setprecision(2);
     for (const auto &i : studentai) {
-        f << left << setw(15) << i.vardas
-             << setw(15) << i.pavarde
+        f << left << setw(stulpelio_plotis(i.vardas, 30)) << i.vardas
+             << setw(stulpelio_plotis(i.pavarde, 30)) << i.pavarde
              << setw(20) << i.vidurkis_val
              << setw(20) << i.mediana_val << '\n';
     }
@@ -133,31 +144,55 @@ void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav) {
     cout << " | " << failo_pav << " Failo rasymas uztruko: " << diff.count() << " s.\n";
 }
 void spausdinti_i_terminal (vector<student>& studentai) {
-    cout << left << setw(15) << "Vardas"
-         << setw(15) << "Pavarde"
+    cout << left << setw(30) << "Vardas"
+         << setw(30) << "Pavarde"
          << setw(20) << "Galutinis (vid.)"
-         << setw(20) << "Galutinis (med.)\n";
-    cout << string(70, '-') << '\n';
+         << setw(20) << "Galutinis (med.)" << '\n';
+    cout << string(100, '-') << '\n';
     cout << fixed << setprecision(2);
     for (const auto &i : studentai) {
-        cout << left << setw(15) << i.vardas
-             << setw(15) << i.pavarde
+        cout << left << setw(stulpelio_plotis(i.vardas, 30)) << i.vardas
+             << setw(stulpelio_plotis(i.pavarde, 30)) << i.pavarde
              << setw(20) << i.vidurkis_val
              << setw(20) << i.mediana_val << '\n';
     }
 }
-inline void generuoti_studentus (vector<student>& studentai, const int &paz_k) {
+void generuoti_studentus (vector<student>& studentai, const int &paz_k) {
     int kiekis;
     cout << "iveskite studentu kieki: ";
     while (true) if (!get_int_input(kiekis)) continue; else break;
-    // ifstream vardai_vyr("assets/vardai_vyr"), pavardes_vyr("assets/pavardes_vyr");
-    // ifstream vardai_mot("assets/vardai_mot"), pavardes_mot("assets/pavardes_mot");
+
+    ifstream vv("assets/vardai_vyr"), pv("assets/pavardes_vyr");
+    ifstream vm("assets/vardai_mot"), pm("assets/pavardes_mot");
+    vector<string> vardai_vyr, pavardes_vyr, vardai_mot, pavardes_mot;
+    string line;
+    while (getline(vv, line)) vardai_vyr.push_back(line);
+    while (getline(pv, line)) pavardes_vyr.push_back(line);
+    while (getline(vm, line)) vardai_mot.push_back(line);
+    while (getline(pm, line)) pavardes_mot.push_back(line);
+    vv.close(); pv.close(); vm.close(); pm.close();
+    
     for (int i = 0; i < kiekis; ++i) {
         student s;
-        s.vardas = "Vardas" + to_string(i + 1);
-        s.pavarde = "Pavarde" + to_string(i + 1);
+        imti_random_varda_pavarde(s, vardai_vyr, pavardes_vyr, vardai_mot, pavardes_mot);
         randominiai_pazymiai(s, paz_k);
         studentai.push_back(s);
+    }
+}
+void imti_random_varda_pavarde (student& s, const vector<string>& vardai_vyr, const vector<string>& pavardes_vyr, const vector<string>& vardai_mot, const vector<string>& pavardes_mot) {
+    std::random_device rd;  // a seed source for the random number engine
+    std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> distrib(0, 1); // cia istraukiau is cppreference.com
+    if (distrib(gen) == 0) { // vyras
+        std::uniform_int_distribution<> distrib_vardas(0, vardai_vyr.size() - 1);
+        std::uniform_int_distribution<> distrib_pavarde(0, pavardes_vyr.size() - 1);
+        s.vardas = vardai_vyr[distrib_vardas(gen)];
+        s.pavarde = pavardes_vyr[distrib_pavarde(gen)];
+    } else { // moteris
+        std::uniform_int_distribution<> distrib_vardas(0, vardai_mot.size() - 1);
+        std::uniform_int_distribution<> distrib_pavarde(0, pavardes_mot.size() - 1);
+        s.vardas = vardai_mot[distrib_vardas(gen)];
+        s.pavarde = pavardes_mot[distrib_pavarde(gen)];
     }
 }
 void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav) {
