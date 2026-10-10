@@ -3,12 +3,20 @@ using namespace std;
 
 int main() {
     int c, k = 0, paz_k;
+    string failo_pav; 
+
+    // gal iskelti meniu i papildus ar dar kur
     while (true) { // meniu
-        cout << "\n1. Ivesti studentu duomenis ranka\n2. Skaityti is failo\n3. Generuoti pazymius\n4. Generuoti studentus\nPasirinkite: ";
+        cout << "\n1. Ivesti studentu duomenis ranka"
+                "\n2. Apdoroti duomenis is failo"
+                "\n3. Generuoti pazymius studentams"
+                "\n4. Generuoti studentus (ir pazymius)"
+                "\n5. Debug"
+                "\nPasirinkite: ";
         string choice; cin >> choice;
         try {
             c = stoi(choice);
-            if (c == 1 || c == 2 || c == 3 || c == 4 || c == 5) {break;} // jeigu 5, mes testuosime nuo 10k iki 1 milijono studentu
+            if (c == 1 || c == 2 || c == 3 || c == 4 || c == 5) {break;} 
             else {cout << "\n\n\n"; continue;}
         } catch (...) {
             cout << "\n\n\n"; continue;
@@ -25,35 +33,51 @@ int main() {
             cout << "\n\n\n"; continue;
         }
     }
+    if (k == 2) {
+        cout << "Isvesties failo pavadinimas?:\n";
+        while (true) {
+            try {
+                cin >> failo_pav;
+                ofstream f(failo_pav);
+                if (!f.is_open()) throw;
+                else {f.close(); break;}
+            } catch (...) {
+                cout << "nepavyko atidaryti failo: " << failo_pav << endl;
+                continue;
+            }
+        }
+    }
+
     vector<student> studentai;
 
-    if (c == 3 || c == 4) { // pasirinkta generuoti
+    if (c == 3 || c == 4) { // pasirinkta generuoti, kiek studentu?
         cout << "pazymiu/ivertinimu kiekis: "; 
         while (true) if (!get_int_input(paz_k)) continue; else break;
     }
-    else if (c == 2) { // skaityti is failor
+    else if (c == 2) { // pasirinkta skaityti is failo
         string failo_pav;
         system("cd"); system("dir *.txt");
         cout << "iveskite duomenu failo pavadinima : "; cin >> failo_pav;
         skaityti_is_failo(studentai, failo_pav);
     }   
-    else if (c == 5) {
-        // Testavimas su dideliu studentu kiekiu
+    else if (c == 5) {// Testavimas su dideliu studentu kiekiu
+        int r; kaip_rusiuoti(r);
         skaityti_is_failo(studentai, "studentai10000.txt");
-        sutvarkyti_studentus(studentai, 2, "output");
+        sutvarkyti_studentus(studentai, 3, "10000", r);
         studentai.clear();
         cout << "\n";
         skaityti_is_failo(studentai, "studentai100000.txt");
-        sutvarkyti_studentus(studentai, 2, "output");
+        sutvarkyti_studentus(studentai, 3, "100000", r);
         studentai.clear();
         cout << "\n";
         skaityti_is_failo(studentai, "studentai1000000.txt");
-        sutvarkyti_studentus(studentai, 2, "output");
+        sutvarkyti_studentus(studentai, 3, "1000000", r);
         studentai.clear();
         return 0;
     }
-    if (c == 4) { // jeigu pasirinkimas i faila gen
-        generuoti_studentus(studentai, paz_k);
+    if (c == 4) { // jeigu pasirinkta generuoti viska
+        generuoti_studentus(paz_k, failo_pav);
+        return 0;
     }
     
     while (c == 1 || c == 3) { // while pats arba paz. generuoti
@@ -73,6 +97,6 @@ int main() {
         }
         studentai.push_back(studentas);
     }
-    sutvarkyti_studentus(studentai, k, "output");
+    sutvarkyti_studentus(studentai, k, failo_pav);
     return 0;
 }
