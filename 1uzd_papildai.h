@@ -196,32 +196,27 @@ void kaip_rusiuoti (int &c) {
     // pagal pavardes (pritaikom)
     // pagal vidurki (pritaikom)
     while (true) {
-        cout << "Kaip rusiuoti (1. Pagal pavardes [↑], 2. Pagal vidurki [↓])?: ";
+        cout << "Kaip rusiuoti (1. Pagal pavardes [↑], 2. Pagal vidurki [↓]), 3. Nerusiuoti?: ";
         string choice; cin >> choice;
         try {
             c = stoi(choice);
-            if (c == 1 || c == 2) {cout << '\n'; break;}
+            if (c == 1 || c == 2 || c == 3) {cout << '\n'; break;}
             else {throw;}
         } catch (...) {
             cout << "\n\n\n"; continue;
         }
     }
 }
-void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav, int c) {
+
+// `std::vector` to contemplate; `int`: `1` == to_terminal `2` == to_file; `string` file_name (optional); `int` (optional) sort: `1` by last_name, `2` by average, `3` no sort; 
+void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav, int c) { 
     for (auto &s : studentai) {
         s.vidurkis();
         s.mediana();
     }
     // if c not passed, ask for c
     if (c == 0) kaip_rusiuoti(c);
-
-    if (c == 1) {
-        sort(studentai.begin(), studentai.end(),
-            [](const student &a, const student &b) {return a.pavarde < b.pavarde;});
-    } else {
-        sort(studentai.begin(), studentai.end(),
-            [](const student &a, const student &b) {return a.vidurkis_val > b.vidurkis_val;});
-    }
+    rusiuoti(studentai, c);
 
     if (k == 1) {
         spausdinti_i_terminal(studentai);
@@ -239,4 +234,41 @@ void sutvarkyti_studentus (vector<student>& studentai, const int &k, string fail
         spausdinti_i_faila(galutinis_over5, failo_pav + "_islaike.txt", 1);
         spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt", 1);
     }
+}
+
+void rusiuoti (vector<student>& studentai, const int& c) {
+    if (c == 1) {
+        sort(studentai.begin(), studentai.end(),
+            [](const student &a, const student &b) {return a.pavarde < b.pavarde;});
+    } else if (c == 2) {
+        sort(studentai.begin(), studentai.end(),
+            [](const student &a, const student &b) {return a.vidurkis_val > b.vidurkis_val;});
+    }
+}
+
+void debugger (vector<student>& studentai, const int& c) {
+    skaityti_is_failo(studentai, "studentai10000.txt");
+    sutvarkyti_studentus(studentai, 3, "10000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai100000.txt");
+    sutvarkyti_studentus(studentai, 3, "100000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai1000000.txt");
+    sutvarkyti_studentus(studentai, 3, "1000000", c);
+    studentai.clear();
+}
+void debugger (list<l_student>& studentai, const int& c) {
+    skaityti_is_failo(studentai, "studentai10000.txt");
+    sutvarkyti_studentus(studentai, 3, "10000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai100000.txt");
+    sutvarkyti_studentus(studentai, 3, "100000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai1000000.txt");
+    sutvarkyti_studentus(studentai, 3, "1000000", c);
+    studentai.clear();
 }

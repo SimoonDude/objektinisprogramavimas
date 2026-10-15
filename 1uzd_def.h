@@ -40,6 +40,8 @@ void spausdinti_i_terminal (vector<student>& studentai);
 void generuoti_studentus (const int &paz_k, const int &k, string failo_pav = "0");
 void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav = "output", int c = 0);
 void kaip_rusiuoti (int &c);
+void rusiuoti (vector<student>& studentai, const int& c);
+void debugger (vector<student>& studentai, const int& c);
 int stulpelio_plotis (const string& tekstas, int plotis);
 
 struct l_dict {
@@ -48,8 +50,7 @@ struct l_dict {
     list<string> vardai_mot;
     list<string> pavardes_mot;
 };
-class l_student {
-    public:
+struct l_student {
     std::string vardas;
     std::string pavarde;
     std::list<int> nd;
@@ -70,3 +71,4 @@ void spausdinti_i_faila (list<l_student>& studentai, const string& failo_pav, bo
 void spausdinti_i_terminal (list<l_student>& studentai);
 void l_generuoti_studentus (const int &paz_k, string failo_pav = "0");
 void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string failo_pav = "output", int c = 0);
+void debugger (list<l_student>& studentai, const int& c);

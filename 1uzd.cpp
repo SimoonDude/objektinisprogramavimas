@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-    int c, k = 0, paz_k;
+    int c, k = 0, l, paz_k;
     string failo_pav = "0"; 
 
     // gal iskelti meniu i papildus ar dar kur
@@ -49,8 +49,20 @@ int main() {
             }
         }
     }
+    while (true && c == 5) {
+        cout << "Naudoti std::vector (1) ar std::list (2) ?: ";
+        string choice; cin >> choice;
+        try {
+            l = stoi(choice);
+            if (l == 1 || l == 2) {break;}
+            else {cout << "\n\n\n"; continue;}
+        } catch (...) {
+            cout << "\n\n\n"; continue;
+        }
+    }
 
     vector<student> studentai;
+    list<l_student> l_studentai;
 
     if (c == 3 || c == 4) { // pasirinkta generuoti, kiek studentu?
         cout << "pazymiu/ivertinimu kiekis: "; 
@@ -64,17 +76,8 @@ int main() {
     }   
     else if (c == 5) {// Testavimas su dideliu studentu kiekiu
         int r; kaip_rusiuoti(r);
-        skaityti_is_failo(studentai, "studentai10000.txt");
-        sutvarkyti_studentus(studentai, 3, "10000", r);
-        studentai.clear();
-        cout << "\n";
-        skaityti_is_failo(studentai, "studentai100000.txt");
-        sutvarkyti_studentus(studentai, 3, "100000", r);
-        studentai.clear();
-        cout << "\n";
-        skaityti_is_failo(studentai, "studentai1000000.txt");
-        sutvarkyti_studentus(studentai, 3, "1000000", r);
-        studentai.clear();
+        if (l == 1) debugger(studentai, r);
+        else if (l == 2) debugger(l_studentai, r);        
         return 0;
     }
     if (c == 4) { // jeigu pasirinkta generuoti viska
