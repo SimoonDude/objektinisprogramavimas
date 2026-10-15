@@ -1,9 +1,11 @@
 #include "1uzd_papildai.h"
+#include "1uzd_list.h"
+
 using namespace std;
 
 int main() {
     int c, k = 0, paz_k;
-    string failo_pav; 
+    string failo_pav = "0"; 
 
     // gal iskelti meniu i papildus ar dar kur
     while (true) { // meniu
@@ -76,7 +78,7 @@ int main() {
         return 0;
     }
     if (c == 4) { // jeigu pasirinkta generuoti viska
-        generuoti_studentus(paz_k, failo_pav);
+        generuoti_studentus(paz_k, k, failo_pav);
         return 0;
     }
     
@@ -89,10 +91,10 @@ int main() {
         }
         switch (c) {
             case 1:
-                duomenu_ivedimas(studentas);
+                studentas.duomenu_ivedimas();
                 break;
             case 3:
-                randominiai_pazymiai(studentas, paz_k);
+                studentas.randominiai_pazymiai(paz_k);
                 break;
         }
         studentai.push_back(studentas);
