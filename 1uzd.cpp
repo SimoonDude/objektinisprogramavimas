@@ -95,13 +95,13 @@ int main() {
         switch (c) {
             case 1:
                 studentas.duomenu_ivedimas();
-                cerr << "`studentas` atminties adresas: " << &studentas << endl;
                 break;
             case 3:
                 studentas.randominiai_pazymiai(paz_k);
                 break;
         }
         studentai.push_back(studentas);
+        cerr << "objekto `student *` adresas: " << &studentai.back() << '\n';
     }
     sutvarkyti_studentus(studentai, k, failo_pav);
     return 0;

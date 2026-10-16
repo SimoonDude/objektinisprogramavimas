@@ -11,9 +11,12 @@
 # student::randominiai_pazymiai
 # neisveda i terminal
 # ir hujovas rez i faila :D
+# sutvarkyti adreso gavima
 
 
 TOP:
+pakeisti i <template> `l_`-tipo objektus
+
 kai renkuosi faila is kurio skaityti
 noreciau moketi pasirinkti pvz `1`
 ir tai bus pirmas is saraso
