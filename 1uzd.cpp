@@ -95,6 +95,7 @@ int main() {
         switch (c) {
             case 1:
                 studentas.duomenu_ivedimas();
+                cerr << "`studentas` atminties adresas: " << &studentas << endl;
                 break;
             case 3:
                 studentas.randominiai_pazymiai(paz_k);

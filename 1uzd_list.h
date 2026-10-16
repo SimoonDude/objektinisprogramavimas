@@ -187,7 +187,7 @@ void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string fail
     if (c == 1) {
         studentai.sort(
             [](const l_student &a, const l_student &b) {return a.pavarde < b.pavarde;});
-    } else {
+    } else if (c == 2) {
         studentai.sort(
             [](const l_student &a, const l_student &b) {return a.vidurkis_val > b.vidurkis_val;});
     }

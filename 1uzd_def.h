@@ -33,7 +33,6 @@ struct student {
 bool get_int_input (int &balas, bool minusvienas = false); // paima int inputa is userio, grazina `True` jeigu pavyko; `False` jeigu ne.
 bool get_name_input (string &vard, string&pav); // get input string; if `-1` break loop
 void randominiai_pazymiai (student &s, const int &k);
-void duomenu_ivedimas (student &studentas);
 void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
 void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav, bool debug = 0);
 void spausdinti_i_terminal (vector<student>& studentai);
