@@ -33,3 +33,7 @@ Matuota su  `studentai10000.txt`, `studentai100000.txt` ir
 `std::vector` skirstymą atliko greičiau. `std::list` įrašymas į failus buvo
 šiek tiek greitesnis su 10 000 ir 100 000 įrašų, tačiau su 1 000 000 įrašų
 greitesnis buvo `std::vector`. Bendras `std::vector` rezultatas buvo geresnis.
+
+### Papildomi komentarai
+
+<img width="656" height="50" alt="{009B9741-B639-469F-80A3-92D4BEF856D2}" src="https://github.com/user-attachments/assets/6561230b-3892-4733-98d2-fe40ba4f4ff4" />
