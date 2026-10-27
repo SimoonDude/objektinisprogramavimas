@@ -111,7 +111,8 @@ void skaityti_is_failo (vector<student> &studentai, const string &failo_pav) {
     chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
     cout << " | " << failo_pav << " Failo skaitymas uztruko: " << diff.count() << " s.\n";
 }
-void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav, bool debug) {
+// last flag = debugger or not
+void spausdinti_i_faila (const vector<student>& studentai, const string& failo_pav, bool debug) {
     auto start = chrono::high_resolution_clock::now();
     ofstream f(failo_pav);
     if (!f.is_open()) {
@@ -207,10 +208,12 @@ void kaip_rusiuoti (int &c) {
         }
     }
 }
+bool pagyrunas (const student& s) {
+    return s.vidurkis_val >= 5;
+};
 bool vargsunas (const student& s) {
     return s.vidurkis_val < 5;
 };
-
 // `std::vector` to contemplate; `int`: `1` == to_terminal `2` == to_file; `string` file_name (optional); `int` (optional) sort: `1` by last_name, `2` by average, `3` no sort; 
 void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav, int c) { 
     for (auto &s : studentai) {
@@ -227,28 +230,28 @@ void sutvarkyti_studentus (vector<student>& studentai, const int &k, string fail
         spausdinti_i_faila(studentai, failo_pav);
     } else if (k == 3) {
         auto start = chrono::high_resolution_clock::now();
-        // auto placer = std::stable_partition(
+
+        // auto newEnd = std::remove_if(
         //     studentai.begin(),
         //     studentai.end(),
-        //     [](const student& s){
-        //         return s.vargsunas();
-        //     }
+        //     vargsunas
         // );
+        // vector<student> galutinis_below5;
+        // std::copy(newEnd, studentai.end(), std::back_inserter(galutinis_below5));
+        // studentai.erase(newEnd, studentai.end());
 
-        auto newEnd = std::remove_if(
+        auto middle = std::stable_partition(
             studentai.begin(),
             studentai.end(),
-            vargsunas
+            pagyrunas
         );
-        vector<student> galutinis_below5;
-        galutinis_below5.reserve(studentai.end() - newEnd);
-        std::copy(newEnd, studentai.end(), std::back_inserter(galutinis_below5));
-        studentai.erase(newEnd, studentai.end());
-        
+
         chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
         cout << " | Studentu skirstymas i dvi grupes uztruko: " << diff.count() << " s.\n";
-        spausdinti_i_faila(studentai, failo_pav + "_islaike.txt", 1);
-        spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt", 1);
+        // spausdinti_i_faila(studentai, failo_pav + "_islaike.txt", 1);
+        // spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt", 1);
+        spausdinti_i_faila(vector<student>(studentai.begin(), middle), failo_pav + "_islaike.txt", 1);
+        spausdinti_i_faila(vector<student>(middle, studentai.end()), failo_pav + "_neislaike.txt", 1);
     }
 }
 
@@ -263,19 +266,6 @@ void rusiuoti (vector<student>& studentai, const int& c) {
 }
 
 void debugger (vector<student>& studentai, const int& c) {
-    skaityti_is_failo(studentai, "studentai10000.txt");
-    sutvarkyti_studentus(studentai, 3, "10000", c);
-    studentai.clear();
-    cout << "\n";
-    skaityti_is_failo(studentai, "studentai100000.txt");
-    sutvarkyti_studentus(studentai, 3, "100000", c);
-    studentai.clear();
-    cout << "\n";
-    skaityti_is_failo(studentai, "studentai1000000.txt");
-    sutvarkyti_studentus(studentai, 3, "1000000", c);
-    studentai.clear();
-}
-void debugger (list<l_student>& studentai, const int& c) {
     skaityti_is_failo(studentai, "studentai10000.txt");
     sutvarkyti_studentus(studentai, 3, "10000", c);
     studentai.clear();

@@ -205,18 +205,41 @@ void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string fail
     } else if (k == 3) {
         auto start = chrono::high_resolution_clock::now();
 
-        auto newEnd = std::remove_if(
-            studentai.begin(),
-            studentai.end(),
-            l_vargsunas
-        );
+        // auto newEnd = std::remove_if(
+        //     studentai.begin(),
+        //     studentai.end(),
+        //     l_vargsunas
+        // );
+        // list<l_student> galutinis_bezlow5;
+        // std::copy(newEnd, studentai.end(), std::back_inserter(galutinis_below5));
+        // studentai.erase(newEnd, studentai.end());
+
         list<l_student> galutinis_below5;
-        std::copy(newEnd, studentai.end(), std::back_inserter(galutinis_below5));
-        studentai.erase(newEnd, studentai.end());
+        for (auto it = studentai.begin(); it != studentai.end();) {
+            if (l_vargsunas(*it)) {
+                auto studentas = it++;
+                galutinis_below5.splice(galutinis_below5.end(), studentai, studentas);
+            } else {
+                ++it;
+            }
+        }
 
         chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
         cout << " | Studentu skirstymas i dvi grupes uztruko: " << diff.count() << " s.\n";
         spausdinti_i_faila(studentai, failo_pav + "_islaike.txt", 1);
         spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt", 1);
     }
+}
+void debugger (list<l_student>& studentai, const int& c) {
+    skaityti_is_failo(studentai, "studentai10000.txt");
+    sutvarkyti_studentus(studentai, 3, "10000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai100000.txt");
+    sutvarkyti_studentus(studentai, 3, "100000", c);
+    studentai.clear();
+    cout << "\n";
+    skaityti_is_failo(studentai, "studentai1000000.txt");
+    sutvarkyti_studentus(studentai, 3, "1000000", c);
+    studentai.clear();
 }

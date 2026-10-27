@@ -35,7 +35,7 @@ bool get_int_input (int &balas, bool minusvienas = false); // paima int inputa i
 bool get_name_input (string &vard, string&pav); // get input string; if `-1` break loop
 void randominiai_pazymiai (student &s, const int &k);
 void skaityti_is_failo (vector<student> &studentai, const string &failo_pav);
-void spausdinti_i_faila (vector<student>& studentai, const string& failo_pav, bool debug = 0);
+void spausdinti_i_faila (const vector<student>& studentai, const string& failo_pav, bool debug = 0);
 void spausdinti_i_terminal (vector<student>& studentai);
 void generuoti_studentus (const int &paz_k, const int &k, string failo_pav = "0");
 void sutvarkyti_studentus (vector<student>& studentai, const int &k, string failo_pav = "output", int c = 0);
