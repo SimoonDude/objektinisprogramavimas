@@ -176,14 +176,8 @@ void l_generuoti_studentus (const int &paz_k, string failo_pav) {
     }
     if (to_file) f.close();
 }
-void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string failo_pav, int c) {
-    for (auto &s : studentai) {
-        s.vidurkis();
-        s.mediana();
-    }
-    // if c not passed, ask for c
-    if (c == 0) kaip_rusiuoti(c);
 
+void rusiuoti (list<l_student>& studentai, const int& c) {
     if (c == 1) {
         studentai.sort(
             [](const l_student &a, const l_student &b) {return a.pavarde < b.pavarde;});
@@ -191,6 +185,18 @@ void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string fail
         studentai.sort(
             [](const l_student &a, const l_student &b) {return a.vidurkis_val > b.vidurkis_val;});
     }
+}
+bool l_vargsunas (const l_student& s) {
+    return s.vidurkis_val < 5;
+};
+void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string failo_pav, int c) {
+    for (auto &s : studentai) {
+        s.vidurkis();
+        s.mediana();
+    }
+    // if c not passed, ask for c
+    if (c == 0) kaip_rusiuoti(c);
+    rusiuoti(studentai, c);
 
     if (k == 1) {
         spausdinti_i_terminal(studentai);
@@ -198,14 +204,19 @@ void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string fail
         spausdinti_i_faila(studentai, failo_pav);
     } else if (k == 3) {
         auto start = chrono::high_resolution_clock::now();
-        list<l_student> galutinis_over5, galutinis_below5;
-        for (const auto &s : studentai) {
-            if (s.vidurkis_val >= 5) {galutinis_over5.push_back(s);}
-            else {galutinis_below5.push_back(s);}
-        }
+
+        auto newEnd = std::remove_if(
+            studentai.begin(),
+            studentai.end(),
+            l_vargsunas
+        );
+        list<l_student> galutinis_below5;
+        std::copy(newEnd, studentai.end(), std::back_inserter(galutinis_below5));
+        studentai.erase(newEnd, studentai.end());
+
         chrono::duration<double> diff = chrono::high_resolution_clock::now() - start;
         cout << " | Studentu skirstymas i dvi grupes uztruko: " << diff.count() << " s.\n";
-        spausdinti_i_faila(galutinis_over5, failo_pav + "_islaike.txt", 1);
+        spausdinti_i_faila(studentai, failo_pav + "_islaike.txt", 1);
         spausdinti_i_faila(galutinis_below5, failo_pav + "_neislaike.txt", 1);
     }
 }

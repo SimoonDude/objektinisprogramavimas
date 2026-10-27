@@ -1,3 +1,4 @@
+#include "1uzd_def.h"
 #include "1uzd_papildai.h"
 #include "1uzd_list.h"
 

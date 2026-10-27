@@ -14,6 +14,7 @@ struct dict {
     vector<string> vardai_mot;
     vector<string> pavardes_mot;
 };
+
 struct student {
     string vardas;
     string pavarde;
@@ -42,6 +43,7 @@ void kaip_rusiuoti (int &c);
 void rusiuoti (vector<student>& studentai, const int& c);
 void debugger (vector<student>& studentai, const int& c);
 int stulpelio_plotis (const string& tekstas, int plotis);
+bool vargsunas (const student& s);
 
 struct l_dict {
     list<string> vardai_vyr;
@@ -70,4 +72,6 @@ void spausdinti_i_faila (list<l_student>& studentai, const string& failo_pav, bo
 void spausdinti_i_terminal (list<l_student>& studentai);
 void l_generuoti_studentus (const int &paz_k, string failo_pav = "0");
 void sutvarkyti_studentus (list<l_student>& studentai, const int &k, string failo_pav = "output", int c = 0);
+void rusiuoti (list<l_student>& studentai, const int& c);
 void debugger (list<l_student>& studentai, const int& c);
+bool l_vargsunas (const l_student& s);
