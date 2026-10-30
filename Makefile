@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 
-TARGET = 1uzd
+TARGET = studentai
 SOURCES = 1uzd.cpp
 HEADERS = 1uzd_def.h 1uzd_list.h 1uzd_papildai.h
 

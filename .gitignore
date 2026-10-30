@@ -1,9 +1,11 @@
 # nu as nenoriu
 output
 output2
-studentai1000000*
-studentai100000*
-studentai10000*
+10000*
+.vscode/*
+
+# ignore the compiled file
+1uzd
 
 # Prerequisites
 *.d
@@ -55,7 +57,7 @@ build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
+# Makefile
 install_manifest.txt
 compile_commands.json
 

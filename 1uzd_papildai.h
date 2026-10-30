@@ -266,15 +266,15 @@ void rusiuoti (vector<student>& studentai, const int& c) {
 }
 
 void debugger (vector<student>& studentai, const int& c) {
-    skaityti_is_failo(studentai, "studentai10000.txt");
+    skaityti_is_failo(studentai, "./benchmark-data/studentai10000.txt");
     sutvarkyti_studentus(studentai, 3, "10000", c);
     studentai.clear();
     cout << "\n";
-    skaityti_is_failo(studentai, "studentai100000.txt");
+    skaityti_is_failo(studentai, "./benchmark-data/studentai100000.txt");
     sutvarkyti_studentus(studentai, 3, "100000", c);
     studentai.clear();
     cout << "\n";
-    skaityti_is_failo(studentai, "studentai1000000.txt");
+    skaityti_is_failo(studentai, "./benchmark-data/studentai1000000.txt");
     sutvarkyti_studentus(studentai, 3, "1000000", c);
     studentai.clear();
 }
