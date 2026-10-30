@@ -1,3 +1,13 @@
+# nu as nenoriu
+output
+output2
+10000*
+.vscode/*
+benchmark-data/
+
+# ignore the compiled file
+1uzd
+
 # Prerequisites
 *.d
 
@@ -48,7 +58,7 @@ build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
+# Makefile
 install_manifest.txt
 compile_commands.json
 
