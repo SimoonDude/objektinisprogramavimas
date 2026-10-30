@@ -3,6 +3,7 @@ output
 output2
 10000*
 .vscode/*
+benchmark-data/
 
 # ignore the compiled file
 1uzd
